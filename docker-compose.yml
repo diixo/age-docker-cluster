@@ -1,20 +1,6 @@
-version: "2.2"
 
 services:
-  license:
-    image: age-license:${LICENSE_MANAGER_VERSION:-15.2}
-    build:
-      context: .
-      dockerfile: license/Dockerfile.license
-      args:
-        LICENSE_MANAGER_VERSION: ${LICENSE_MANAGER_VERSION:-15.2}
-    hostname: license.age-docker-cluster_default
-    container_name: age-license
-    expose:
-      - "6200"
-    volumes:
-      - ./age.dat:/license/age.dat
-    mac_address: de:59:34:6f:b6:98
+
 
   head:
     image: age:${AGE_VERSION:-2022.1.2}
@@ -29,13 +15,10 @@ services:
     privileged: true 
     volumes:
       - opt_age:/opt/age
-      - home_rstudio:/home/rstudio
       - home_ageadmin:/home/ageadmin
     expose:
       - "6444"
       - "6445"
-    depends_on:
-      - "license"
 
   c1:
     image: age:${AGE_VERSION:-2022.1.2} 
@@ -50,11 +33,7 @@ services:
     privileged: true 
     volumes:
       - opt_age:/opt/age 
-      - home_rstudio:/home/rstudio
       - home_ageadmin:/home/ageadmin
-      - opt_r:/opt/R
-      - etc_rstudio:/etc/rstudio
-      - usr_lib_rstudio:/usr/lib/rstudio-server
       - shared_storage:/opt/rstudio/shared
     expose:
       - "6444"
@@ -74,50 +53,14 @@ services:
     privileged: true
     volumes:
       - opt_age:/opt/age
-      - home_rstudio:/home/rstudio
       - home_ageadmin:/home/ageadmin
-      - opt_r:/opt/R
-      - etc_rstudio:/etc/rstudio
-      - usr_lib_rstudio:/usr/lib/rstudio-server
-      - shared_storage:/opt/rstudio/shared
     expose:
       - "6444"
     depends_on:
       - "head"
 
-  rsw:
-    build:
-      context: . 
-      dockerfile: rsw/Dockerfile.rsw
-      args:
-        AGE_VERSION: ${AGE_VERSION:-2022.1.2}
-    image: rsw:2022.07.1-554.pro3-age-${AGE_VERSION:-2022.1.2}
-    command: ["rsw"]
-    hostname: rsw.age-docker-cluster_default
-    container_name: rsw
-    privileged: true
-    environment:
-      RSW_LICENSE: ${RSW_LICENSE}
-    volumes:
-      - opt_age:/opt/age
-      - home_rstudio:/home/rstudio
-      - home_ageadmin:/home/ageadmin
-      - opt_r:/opt/R
-      - etc_rstudio:/etc/rstudio
-      - usr_lib_rstudio:/usr/lib/rstudio-server
-      - shared_storage:/opt/rstudio/shared
-    ports:
-      - "8787:8787"
-    depends_on:
-      - "head"
-      - "c1"
-      - "c2"
 
 volumes:
   opt_age:
   home_ageadmin:
-  home_rstudio:
-  opt_r:
-  etc_rstudio:
-  usr_lib_rstudio:
   shared_storage:
