@@ -14,9 +14,6 @@ In order to successfully run, for a desired Altair Grid Engine Version (e.g. "20
 
 Finally a valid license file `age.dat` needs to be deployed into the `license` folder. 
 
-### RStudio Workbench
-
-In the environment launching the `docker-compose.yml`, the environment variable `RSW_LICENSE` must be set to a vaid license key. 
 
 Default user name and password are `rstudio/rstudio`. 
 
@@ -46,6 +43,3 @@ docker-compose down
 
 It also may be advisable to clean out the volumes by running `scripts/clean-volumes.sh`.
 
-## RSW details
-
-RSW is setup to use shared storage for session-data as well as audit-data. Admin dashboard is enabled, too, for the rstudio user.   
